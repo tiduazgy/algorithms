@@ -1,0 +1,29 @@
+//实际上就是找树中所有节点左子树深度和右子树深度和的最大值
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    int diamter = 0;
+    public int diameterOfBinaryTree(TreeNode root) {
+        if(root == null)return 0;
+        getDepth(root);
+        return diamter;
+        
+    }
+    
+    private int getDepth(TreeNode root){
+        if(root == null)return 0;
+        int leftDepth = getDepth(root.left);
+        int rightDepth = getDepth(root.right);
+        diamter = Math.max(diamter,leftDepth+rightDepth);
+        return Math.max(leftDepth,rightDepth)+1;
+        
+
+    }
+}
