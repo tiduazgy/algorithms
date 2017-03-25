@@ -1,0 +1,40 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+ //实现的很烂，有很大提升空间，简单的把层序遍历从左开始变成从右开始就能优化很多了。
+public class Solution {
+    public int findBottomLeftValue(TreeNode root) {
+        if(root == null)return 0;
+        LinkedList<TreeNode> queue = new LinkedList<TreeNode>();
+        queue.offer(root);
+        while(!queue.isEmpty()){
+            boolean flag = false;
+            int levelNum = queue.size();
+            for(int i = 0;i < levelNum;i++){
+                if(queue.get(i).left != null){
+                    queue.offer(queue.get(i).left);
+                    flag = true;
+                }
+                if(queue.get(i).right != null){
+                    queue.offer(queue.get(i).right);
+                    flag = true;
+                }
+                
+            }
+            if(flag){
+                for(int i = 0;i < levelNum;i++){
+                    queue.poll();
+                }
+            }
+            else break;
+        }
+        return queue.peek().val;
+        
+    }
+}
