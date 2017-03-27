@@ -1,0 +1,31 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+ /*对于每个节点，1，两个子节点的rob函数最大值相加，不加自己2，不考虑两个子节点的rob函数最大值+自己的值
+ 因为对于rob函数，考虑子节点和不考虑子节点都要重复计算孙子节点的rob函数，以此类推，将在很多节点上重复计算rob函数，于是这个问题可以用动态规划来解决
+ 对于一个已经确定rob函数值的节点，将他们加入hashMap,这样当以后再需要计算这个点的rob函数值，直接从hashMap中得到。
+ */
+public class Solution {
+    HashMap<TreeNode,Integer> map = new HashMap<>(); 
+    public int rob(TreeNode root) {
+        if(root == null)return 0;
+        if(map.containsKey(root))return map.get(root);
+        int val = root.val;
+        if(root.left != null){
+            val += rob(root.left.left) + rob(root.left.right);
+        }
+        if(root.right != null){
+            val += rob(root.right.left) + rob(root.right.right);
+        }
+        val = Math.max(val,rob(root.left) + rob(root.right));
+        map.put(root,val);
+        return val;
+        
+    }
+}
