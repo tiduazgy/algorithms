@@ -1,0 +1,26 @@
+public class Solution {
+    public int numTrees(int n) {
+        int[] array = new int[n+1];
+        array[0] = 1;
+        array[1] = 1;
+        return helper(n,array);
+        }
+    private int helper(int n,int[]array){
+        if(n == 0)return 1;
+        if(n == 1)return 1;
+        int result = 0;
+        for(int i = 1;i <= n;i++){
+            int left = i-1;
+            int right = n-i;
+            if(array[left] == 0)array[left] = helper(left,array);
+            if(array[right] == 0)array[right] = helper(right,array);
+            result += array[left] * array[right];
+        }
+        array[n] = result;
+        return array[n];
+            
+        }
+    }
+    /*对于根节点1，左边0个节点，右面n-1个节点；对于根节点2，左面1个节点，右面n-2个节点…………于是f(n) = f(0)f(n-1) + f(1)f(n-2) + …… +f(n-1)f(0)
+    实际上，这个函数史数学上的catalan数，f(n) = (2n)!/n!(n+1)! = c(2n,n)/(n+1)
+    */
