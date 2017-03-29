@@ -1,0 +1,34 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+ /*
+ 我用的广度优先遍历，实际上用深度优先+每层一个节点的方法明显效率更高
+ */
+public class Solution {
+    public List<Integer> rightSideView(TreeNode root) {
+        List<Integer> result = new ArrayList();
+        LinkedList<TreeNode> queue = new LinkedList();
+        bfs(root,result,queue);
+        return result;
+    }
+    private void bfs(TreeNode root,List<Integer> list,LinkedList<TreeNode> queue){
+        if(root == null)return;
+        queue.offer(root);
+        TreeNode temp;
+        while(!queue.isEmpty()){
+            int levelNum = queue.size();
+            for(int i =0;i < levelNum;i++){
+                temp = queue.poll();
+                if(i == levelNum - 1)list.add(temp.val);
+                if(temp.left != null)queue.offer(temp.left);
+                if(temp.right != null)queue.offer(temp.right);
+            }
+        }
+
+    }
