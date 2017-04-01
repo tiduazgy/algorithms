@@ -1,0 +1,99 @@
+
+import java.io.*;
+import java.util.*;
+public class Main {
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+        String[] line = input.nextLine().split(" ");
+        int size = line.length;
+        int[][]maze = new int[size][size];
+        int count = 0;
+        for(int i = 0;i < size;i++){
+            maze[count][i] = Integer.parseInt(line[i]);
+        }
+        while (input.hasNext()){
+            count++;
+            line = input.nextLine().split(" ");
+            for(int i = 0;i < size;i++){
+                maze[count][i] = Integer.parseInt(line[i]);
+            }
+        }
+
+        //int [][] maze = new int[][]{{0,1,0,0},{0,0,0,1},{1,0,1,0},{0,0,0,0}};
+        int [][] visited = new int[maze.length][maze.length];
+        //int result = dfs(maze,visited,0,0,size - 1,0);
+        int result = bfs(maze,visited);
+        System.out.print(result);
+
+
+    }
+    private  static  int dfs(int[][] maze,int[][] visited,int x,int y,int end,int step){
+        visited[y][x] = 1;
+        if(x < 0 || y < 0 || x > end || y > end || maze[y][x]== 1)return -1;
+        if(x == end && y == end)return step;
+        TreeSet<Integer> treeSet = new TreeSet();
+        if(x + 1 <= end && visited[y][x+1] == 0){
+            int right = dfs(maze,visited,x+1,y,end,step+1);
+            if(right != -1)treeSet.add(right);
+        }
+        if(y + 1 <= end && visited[y+1][x] == 0){
+            int down = dfs(maze,visited,x,y+1,end,step+1);
+            if(down != -1)treeSet.add(down);
+        }
+        if(x - 1 >= 0 && visited[y][x-1] == 0){
+            int left = dfs(maze,visited,x-1,y,end,step+1);
+            if(left != -1)treeSet.add(left);
+        }
+        if(y - 1 >= 0 && visited[y-1][x] == 0){
+            int up = dfs(maze,visited,x,y-1,end,step+1);
+            if(up != -1)treeSet.add(up);
+        }
+
+        if(treeSet.isEmpty())return -1;
+        return Collections.min(treeSet);
+    }
+
+    private  static int bfs(int[][] maze,int[][] visited){
+        int end = maze.length - 1;
+        LinkedList<Node> queue = new LinkedList();
+        queue.offer(new Node(0,0,0));
+        visited[0][0] = 1;
+        while (!queue.isEmpty()){
+            int levelNum = queue.size();
+            for(int i = 0;i < levelNum;i++){
+                Node node = queue.poll();
+                int curx = node.x;
+                int cury = node.y;
+                int curdep = node.depth;
+                if(curx == end && cury == end)return curdep;
+                if(curx+1 <= end && maze[cury][curx+1] != 1 && visited[cury][curx+1] !=1){
+                    queue.offer(new Node(curx+1,cury,curdep+1));
+                    visited[cury][curx+1] = 1;
+                }
+                if(cury+1 <= end && maze[cury+1][curx] != 1 && visited[cury+1][curx] !=1){
+                    queue.offer(new Node(curx,cury+1,curdep+1));
+                    visited[cury+1][curx] = 1;
+                }
+                if(curx-1 >= 0 && maze[cury][curx-1] != 1 && visited[cury][curx-1] !=1){
+                    queue.offer(new Node(curx-1,cury,curdep+1));
+                    visited[cury][curx-1] = 1;
+                }
+                if(cury-1 >= 0 && maze[cury-1][curx] != 1 && visited[cury-1][curx] !=1){
+                    queue.offer(new Node(curx,cury-1,curdep+1));
+                    visited[cury-1][curx] = 1;
+                }
+            }
+        }
+        return -1;
+    }
+}
+class Node{
+    int x;
+    int y;
+    int depth;
+    Node(int x,int y,int depth){
+        this.x = x;
+        this.y = y;
+        this.depth = depth;
+    }
+}
